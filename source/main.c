@@ -61,45 +61,40 @@ void checkHostnames()
     Result net_rc = nifmGetInternetConnectionStatus(NULL, NULL, NULL);
     if (R_FAILED(net_rc)) {
         printf(CONSOLE_RED "WARNING, NOT CONNECTED TO ANY NETWORK! AIRPLANE MODE?\n" CONSOLE_RESET);
-    }
+    } else {
+        printf("Testing:\n");
 
-    printf("Testing:\n");
+        for (int i = 0; i < sizeof(hostnames) / sizeof(hostnames[0]); i++)
+        {
+            // Print hostname in a fixed-width field, then temporary dots
+            printf("  %-30s ...", hostnames[i]);
+            consoleUpdate(console);
 
-    // Iterate through hostnames array
-    for (int i = 0; i < sizeof(hostnames)/sizeof(hostnames[0]); i++)
-    {
-        // Print the hostname
-        printf("\x1b[2C%s", hostnames[i]);
-        // Move the cursor and print progress dots
-        printf("\x1b[%dC", 40-console->cursorX);
-        printf("...");
-        // Update console here so we get a "live" output
-        consoleUpdate(console);
+            int result = resolveHostname(hostnames[i]);
 
-        // Resolve the hostname
-        int result = resolveHostname(hostnames[i]);
+            // Move back 3 characters to overwrite dots
+            printf("\x1b[3D");
 
-        // Move the cursor back 3 steps to overwrite the dots and print status
-        printf("\x1b[3D");
-        switch(result) {
-            case DNS_BLOCKED:
-                printf(CONSOLE_GREEN "blocked");
-                break;
-            case DNS_RESOLVED:
-                printf(CONSOLE_RED "unblocked");
-                break;
-            case DNS_UNRESOLVED:
-                printf(CONSOLE_YELLOW "unresolved");
-                break;
+            // Print the status
+            switch(result) {
+                case DNS_BLOCKED:
+                    printf(CONSOLE_GREEN "blocked" CONSOLE_RESET);
+                    break;
+                case DNS_RESOLVED:
+                    printf(CONSOLE_RED "unblocked" CONSOLE_RESET);
+                    break;
+                case DNS_UNRESOLVED:
+                    printf(CONSOLE_YELLOW "unresolved" CONSOLE_RESET);
+                    break;
+            }
+
+            // End the line cleanly
+            printf("\n");
+            consoleUpdate(console);
         }
-
-        // Reprint hostname with changed color
-        printf("\x1b[%dD%s\n" CONSOLE_RESET, console->cursorX-2, hostnames[i]);
-
-        consoleUpdate(console);
     }
 
-    printf("\nPress B to exit. Press X to retry.");
+    printf("\nPress B to exit. Press X to retry.\n");
     consoleUpdate(console);
 }
 
