@@ -43,9 +43,9 @@ SOURCES		:=	source
 DATA		:=	data
 INCLUDES	:=	include
 
-APP_VERSION := 1.0.4
+APP_VERSION := 1.0.4b
 APP_TITLE   := 90DNS Testing Utility
-APP_AUTHOR  := Nexrem
+APP_AUTHOR  := drizzt
 ICON        := appicon.jpg
 
 #---------------------------------------------------------------------------------
@@ -56,7 +56,7 @@ ARCH	:=	-march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE
 CFLAGS	:=	-g -Wall -O2 -ffunction-sections \
 			$(ARCH) $(DEFINES)
 
-CFLAGS	+=	$(INCLUDE) -D__SWITCH__
+CFLAGS	+=	$(INCLUDE) -D__SWITCH__ -DAPP_VERSION='"$(APP_VERSION)"'
 
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions
 

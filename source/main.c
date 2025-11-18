@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 
 void checkHostnames() 
 {
-    printf("90DNS Testing Utility v1.0.4\n\n");
+    printf("90DNS Testing Utility %s\n\n", APP_VERSION);
 
     // Check if system says we're connected to a network (wifi or ethernet)
     Result net_rc = nifmGetInternetConnectionStatus(NULL, NULL, NULL);
